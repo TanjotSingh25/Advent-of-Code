@@ -1,3 +1,5 @@
+import sys
+
 # Using Recursion 
 def canMatchTarget(target, numbers):
     def search(index, currentValue):
@@ -27,17 +29,33 @@ def parseEquation(line):
 
 
 def main():
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    else:
+        filename = "input.txt"
+
     total = 0
 
-    with open("input.txt", "r", encoding="utf-8") as file:
-        for line in file:
-            if not line.strip():
-                continue
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            for line in file:
+                if not line.strip():
+                    continue
 
-            target, numbers = parseEquation(line)
+                target, numbers = parseEquation(line)
 
-            if canMatchTarget(target, numbers):
-                total += target
+                if canMatchTarget(target, numbers):
+                    total += target
+
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' was not found.")
+        return
+    except PermissionError:
+        print(f"Error: Permission denied when trying to read '{filename}'.")
+        return
+    except OSError as error:
+        print(f"Error: Could not read '{filename}': {error}")
+        return
 
     print(f'Total: {total}')
 
